@@ -95,14 +95,27 @@ tweet_fetch=api.search(q=SEARCH,lang="en",count = 200)
 
 tweets= []
 for tweet in tweet_fetch:
-                parsed_tweet = {} 
-                parsed_tweet['text'] = tweet.text 
+                parsed_tweet = [] 
+                parsed_tweet += tweet.text 
                 if tweet.retweet_count > 0: 
                     if parsed_tweet not in tweets: 
                         tweets.append(parsed_tweet) 
                 else: 
                     tweets.append(parsed_tweet)
 
+# ******************* Getting Live Sentiments **********************
+length = len(tweets)
+corpuss = []
+for i in range(0,length):
+    corpuss+=clean_tweets(tweets[i])
+Xt = cv.transform(corpuss).toarray()
+#X=X.append(Xt)
+yt_pred = classifier.predict(Xt)
+    
+d = {"Tweets": tweets , "Sentiments": yt_pred}
+Df= pd.DataFrame(d)
+
+print(Df)
 
 
 
